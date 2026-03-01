@@ -1,6 +1,5 @@
 
 class IDManager:
-    
     """
     IDManager is a class that manages the ID.
 
@@ -63,12 +62,3 @@ class IDManager:
 
     def __repr__(self):
         return self.__str__()
-
-if __name__ == "__main__":
-    manager = IDManager(start=0, step=2)
-    print(f"manager: {manager}")
-    print(f"get_next_id: {manager.get_next_id()}")
-    print(f"get_next_id: {manager.get_next_id()}")
-    manager.reset(start=1)
-    print(f"get_next_id: {manager.get_next_id()}")
-    print(f"get_next_id: {manager.get_next_id()}")
