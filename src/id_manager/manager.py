@@ -30,9 +30,10 @@ class IDManager:
         self.current_id = start
         self.step = step
      
-    def get_next_id(self) -> int:
+    @property
+    def next_id(self) -> int:
         """
-        Get the next ID.
+        Get the next ID and increment the current ID.
         
         Returns
         -------

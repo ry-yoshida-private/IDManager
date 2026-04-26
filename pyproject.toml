@@ -23,3 +23,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 id_manager = ["py.typed"]
+
+[tool.pyright]
+include = ["src", "tests"]
+extraPaths = ["src"]
