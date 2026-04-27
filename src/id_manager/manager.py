@@ -1,7 +1,10 @@
+from dataclasses import dataclass, field
+from threading import Lock
 
+@dataclass
 class IDManager:
     """
-    IDManager is a class that manages the ID.
+    IDManager is a class that manages the ID in a thread-safe manner.
 
     Attributes:
     ----------
@@ -9,55 +12,57 @@ class IDManager:
         The current ID.
     step: int
         The step size.
+    _lock: Lock
+        A threading lock to ensure atomic operations.
     """
-    def __init__(
-        self, 
-        start: int = 0,
-        step: int = 1
-        ):
+    current_id: int = 0
+    step: int = 1
+    _lock: Lock = field(default_factory=Lock, init=False, repr=False)
+
+    def __post_init__(self):
         """
-        Initialize the IDManager.
-        
-        Parameters
-        ----------
-        start : int, optional
-            The start ID. Default is 0.
-        step : int, optional
-            The step size. Default is 1.
+        Validate the IDManager after initialization.
+
+        Raises:
+        -------
+        ValueError
+            If the step size is 0.
         """
-        if step == 0:
+        if self.step == 0:
             raise ValueError("step must be not 0")
-        self.current_id = start
-        self.step = step
-     
+
     @property
     def next_id(self) -> int:
         """
         Get the next ID and increment the current ID.
-        
+        This property is thread-safe.
+
         Returns
         -------
         int
             The next ID.
         """
-        next_id = self.current_id
-        self.current_id += self.step
-        return next_id
+        with self._lock:
+            next_val = self.current_id
+            self.current_id += self.step
+            return next_val
 
     def reset(
         self, 
         start: int = 0
         ) -> None:
         """
-        Reset the IDManager.
-        
+        Reset the IDManager to a specific start value.
+        This method is thread-safe.
+
         Parameters
         ----------
         start : int, optional
             The start ID. Default is 0.
         """
-        self.current_id = start
-    
+        with self._lock:
+            self.current_id = start
+
     def __str__(self):
         return f"IDManager(current_id={self.current_id}, step={self.step})"
 
